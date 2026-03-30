@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="fra2mo" >
+  <xacro:include filename="$(find ros2_fra2mo)/urdf/fra2mo_base_macro.xacro"/>
+  <xacro:include filename="$(find ros2_fra2mo)/urdf/lidar_gazebo_macro.xacro"/> 
+  <!-- <xacro:include filename="$(find ros2_fra2mo)/urdf/d435_gazebo_macro.xacro" />  -->
+  
+  <xacro:property name="LIDAR" value="True"/>
+  <!--<xacro:property name="DEPTH" value="True"/>-->
+  
+  <!-- Diff Drive Robot Base -->
+  <xacro:fra2mo_base/>
+
+  <!-- LIDAR Sensor--> 
+  <xacro:if value="${LIDAR}">
+    <xacro:lidar_gazebo_sensor parent="lidar_link"/>
+  </xacro:if>
+
+  <link name="fra2mo_camera_link">
+      <visual>
+        <geometry>
+          <box size="0.02 0.05 0.02"/>
+        </geometry>
+        <material name="black">
+          <color rgba="0 0 0 1"/>
+        </material>
+      </visual>
+    </link>
+
+    <joint name="fra2mo_camera_joint" type="fixed">
+      <parent link="base_link"/> 
+      <child link="fra2mo_camera_link"/>
+      <!--<origin xyz="0.15 0.0 0.15" rpy="0 0 0"/>-->
+      <origin xyz="0.12 0.0 0.12" rpy = "0 0 0"/> 
+    </joint>
+
+    <link name="fra2mo_camera_link_optical"></link>
+    <joint name="fra2mo_camera_optical_joint" type="fixed">
+      <parent link="fra2mo_camera_link"/>
+      <child link="fra2mo_camera_link_optical"/>
+      <origin xyz="0 0 0" rpy="-1.5708 0 -1.5708"/>
+    </joint>
+
+    <gazebo reference="fra2mo_camera_link">
+      <sensor name="fra2mo_camera_sensor" type="camera">
+        <always_on>true</always_on>
+        <update_rate>30</update_rate>
+        <visualize>true</visualize> <topic>/fra2mo/camera/image_raw</topic>
+        <ignition_frame_id>fra2mo_camera_link_optical</ignition_frame_id>
+
+      <camera>
+        <horizontal_fov>1.047</horizontal_fov>
+        <image>
+          <width>640</width>
+          <height>480</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.05</near>
+          <far>10.0</far>
+        </clip>
+      </camera>
+    </sensor>
+  </gazebo>
+
+  <link name="tray_link">
+    <visual>
+      <geometry>
+        <cylinder radius="0.15" length="0.01"/>
+      </geometry>
+      <material name="grey">
+        <color rgba="0.6 0.6 0.6 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder radius="0.15" length="0.01"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.2"/>
+      <inertia ixx="0.001" iyy="0.001" izz="0.001" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+  <joint name="tray_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="tray_link"/>
+    <origin xyz="0.0 0.0 0.18" rpy="0 0 0"/> 
+  </joint>
+
+  <gazebo reference="tray_joint">
+  <preserveFixedJoint>true</preserveFixedJoint>
+  </gazebo>
+
+  <gazebo reference="tray_link">
+      <material>Gazebo/Grey</material>
+      
+      <mu1>1.0</mu1>
+      <mu2>1.0</mu2>
+      <kp>1000000.0</kp>
+      <kd>1.0</kd>
+      <minDepth>0.001</minDepth>
+    </gazebo>
+
+    <gazebo>
+      <plugin filename="libignition-gazebo-detachable-joint-system.so" name="ignition::gazebo::systems::DetachableJoint">
+        <parent_link>tray_link</parent_link>
+        <child_model>target_box</child_model>
+        <child_link>link</child_link>
+        <attach_topic>/fra2mo/magnet/attach</attach_topic>
+        <detach_topic>/fra2mo/magnet/detach</detach_topic>
+        <initial_attach>false</initial_attach>
+      </plugin>
+    </gazebo>
+
+</robot>

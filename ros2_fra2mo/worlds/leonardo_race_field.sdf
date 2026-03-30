@@ -1,0 +1,439 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+  <world name="leonardo_race_field">
+    
+    <physics name='default_physics' default='0' type='ode'>
+      <gravity>0 0 -9.8066</gravity>
+      <ode>
+        <solver>
+          <type>quick</type>
+          <iters>10</iters>
+          <sor>1.3</sor>
+          <use_dynamic_moi_rescaling>0</use_dynamic_moi_rescaling>
+        </solver>
+        <constraints>
+          <cfm>0</cfm>
+          <erp>0.2</erp>
+          <contact_max_correcting_vel>100</contact_max_correcting_vel>
+          <contact_surface_layer>0.001</contact_surface_layer>
+        </constraints>
+      </ode>
+      <max_step_size>0.004</max_step_size>
+      <real_time_factor>1</real_time_factor>
+      <real_time_update_rate>250</real_time_update_rate>
+      <magnetic_field>6.0e-6 2.3e-5 -4.2e-5</magnetic_field>
+    </physics>
+
+    <light type="directional" name="sun">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+
+    <include>
+      <name>race_field</name>
+      <pose> 10 5 0.1 0 0 3.14159 </pose>
+      <uri>model://race_field</uri>
+    </include>
+    
+    <include>
+      <name>roof</name>
+      <pose> 10 -5 3.1 3.14159 0 3.14159 </pose>
+      <uri>model://roof</uri>
+    </include>
+
+    <model name="kuka_pedestal">
+      <static>true</static>
+      <pose>0.5 1.5 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>0.4 0.4 0.5</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.4 0.4 0.5</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.4 0.4 0.4 1</ambient>
+            <diffuse>0.5 0.5 0.5 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="rack">
+      <static>true</static>
+      <pose>1.5 1.45 0 0 0 0</pose>
+
+      <link name="rack_link">
+        <collision name="top_collision">
+          <pose>0 0 1.25 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.8 0.5 0.05</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="top_visual">
+          <pose>0 0 1.25 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.8 0.5 0.05</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.6 0.4 0.2 1</ambient>
+            <diffuse>0.6 0.4 0.2 1</diffuse>
+          </material>
+        </visual>
+
+        <collision name="leg1_collision">
+          <pose>0.35 0.20 0.625 0 0 0</pose>
+          <geometry><box><size>0.05 0.05 1.25</size></box></geometry>
+        </collision>
+        <visual name="leg1_visual">
+          <pose>0.35 0.20 0.625 0 0 0</pose>
+          <geometry><box><size>0.05 0.05 1.25</size></box></geometry>
+        </visual>
+
+        <collision name="leg2_collision">
+          <pose>0.35 -0.20 0.625 0 0 0</pose>
+          <geometry><box><size>0.05 0.05 1.25</size></box></geometry>
+        </collision>
+        <visual name="leg2_visual">
+          <pose>0.35 -0.20 0.625 0 0 0</pose>
+          <geometry><box><size>0.05 0.05 1.25</size></box></geometry>
+        </visual>
+
+        <collision name="leg3_collision">
+          <pose>-0.35 0.20 0.625 0 0 0</pose>
+          <geometry><box><size>0.05 0.05 1.25</size></box></geometry>
+        </collision>
+        <visual name="leg3_visual">
+          <pose>-0.35 0.20 0.625 0 0 0</pose>
+          <geometry><box><size>0.05 0.05 1.25</size></box></geometry>
+        </visual>
+
+        <collision name="leg4_collision">
+          <pose>-0.35 -0.20 0.625 0 0 0</pose>
+          <geometry><box><size>0.05 0.05 1.25</size></box></geometry>
+        </collision>
+        <visual name="leg4_visual">
+        <pose>-0.35 -0.20 0.625 0 0 0</pose>
+          <geometry><box><size>0.05 0.05 1.25</size></box></geometry>
+        </visual>
+      </link>
+    </model>
+
+    <model name="target_box">
+      <static>false</static>
+      <pose>1.5 1.5 1.535 0 0 0</pose>
+
+      <link name="link">
+        <inertial>
+          <mass>0.3</mass>
+          <inertia>
+            <ixx>0.0004</ixx><iyy>0.0004</iyy><izz>0.0004</izz><ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
+          </inertia>
+        </inertial>
+        <collision name="collision">
+          <geometry><box><size>0.15 0.15 0.15</size></box></geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>1.0</mu>
+                <mu2>1.0</mu2>
+              </ode>
+            </friction>
+            <bounce>
+              <restitution_coefficient>0.0</restitution_coefficient>
+              <threshold>100000.0</threshold>
+            </bounce>
+            <contact>
+              <ode>
+                <max_vel>0.0</max_vel> 
+                <min_depth>0.001</min_depth>
+              </ode>
+            </contact>
+          </surface>
+        </collision>
+        <visual name="box_visual">
+          <geometry><box><size>0.15 0.15 0.15</size></box></geometry>
+          <material>
+            <ambient>0.1 0.2 0.8 1</ambient>
+            <diffuse>0.1 0.2 0.8 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <!-- Punto in cui poserà il target -->
+      <model name="destination_pedestal">
+    <static>true</static>
+    <pose>-0.2 -1.5 0.2 0 0 0</pose>
+    <link name="link">
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>0.5 0.5 0.4</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>0.5 0.5 0.4</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.2 0.7 0.2 1</ambient>
+          <diffuse>0.2 0.7 0.2 1</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+
+    <!-- OGGETTI AGGIUNTIVI NEL MONDO -->
+
+    <!-- Ostacolo basso 2 -->
+    <model name="obstacle_box_2">
+      <static>true</static>
+      <pose>-0.9 -0.2 0.125 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>0.35 0.35 0.25</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.35 0.35 0.25</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.3 0.3 0.8 1</ambient>
+            <diffuse>0.3 0.3 0.8 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Colonna 1 -->
+    <model name="column_1">
+      <static>true</static>
+      <pose>1.8 -0.8 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+              <radius>0.12</radius>
+              <length>1.0</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <cylinder>
+              <radius>0.12</radius>
+              <length>1.0</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <ambient>0.7 0.7 0.7 1</ambient>
+            <diffuse>0.7 0.7 0.7 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Colonna 2 -->
+    <model name="column_2">
+      <static>true</static>
+      <pose>-1.7 0.9 0.45 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+              <radius>0.1</radius>
+              <length>0.9</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <cylinder>
+              <radius>0.1</radius>
+              <length>0.9</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <ambient>0.9 0.9 0.6 1</ambient>
+            <diffuse>0.9 0.9 0.6 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Muro basso vicino alla destinazione -->
+    <model name="low_wall_destination">
+      <static>true</static>
+      <pose>0.55 -1.55 0.2 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>0.9 0.1 0.4</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.9 0.1 0.4</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.5 0.5 0.5 1</ambient>
+            <diffuse>0.5 0.5 0.5 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Tavolino piccolo -->
+    <model name="small_table">
+      <static>true</static>
+      <pose>-1.6 -1.2 0 0 0 0</pose>
+      <link name="table_link">
+        <collision name="top_collision">
+          <pose>0 0 0.45 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.5 0.5 0.05</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="top_visual">
+          <pose>0 0 0.45 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.5 0.5 0.05</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.55 0.3 0.15 1</ambient>
+            <diffuse>0.55 0.3 0.15 1</diffuse>
+          </material>
+        </visual>
+
+        <collision name="leg1_collision">
+          <pose>0.2 0.2 0.225 0 0 0</pose>
+          <geometry><box><size>0.05 0.05 0.45</size></box></geometry>
+        </collision>
+        <visual name="leg1_visual">
+          <pose>0.2 0.2 0.225 0 0 0</pose>
+          <geometry><box><size>0.05 0.05 0.45</size></box></geometry>
+        </visual>
+
+        <collision name="leg2_collision">
+          <pose>0.2 -0.2 0.225 0 0 0</pose>
+          <geometry><box><size>0.05 0.05 0.45</size></box></geometry>
+        </collision>
+        <visual name="leg2_visual">
+          <pose>0.2 -0.2 0.225 0 0 0</pose>
+          <geometry><box><size>0.05 0.05 0.45</size></box></geometry>
+        </visual>
+
+        <collision name="leg3_collision">
+          <pose>-0.2 0.2 0.225 0 0 0</pose>
+          <geometry><box><size>0.05 0.05 0.45</size></box></geometry>
+        </collision>
+        <visual name="leg3_visual">
+          <pose>-0.2 0.2 0.225 0 0 0</pose>
+          <geometry><box><size>0.05 0.05 0.45</size></box></geometry>
+        </visual>
+
+        <collision name="leg4_collision">
+          <pose>-0.2 -0.2 0.225 0 0 0</pose>
+          <geometry><box><size>0.05 0.05 0.45</size></box></geometry>
+        </collision>
+        <visual name="leg4_visual">
+          <pose>-0.2 -0.2 0.225 0 0 0</pose>
+          <geometry><box><size>0.05 0.05 0.45</size></box></geometry>
+        </visual>
+      </link>
+    </model>
+
+  <include>
+    <uri>model://aruco_tag2</uri>
+    <pose>-0.2 -1.10 0.25 -1.57 -1.57 0</pose>
+  </include>
+
+    <include>
+      <name>start_pod</name>
+      <pose> -9.9 -4.9 0.1 0 0 0 </pose>
+      <uri>model://start_pod</uri>
+    </include> 
+
+    <include>
+      <uri>model://aruco_tag</uri>
+      <pose>0.52 1.25 0.25 1.57 -1.57 0</pose>
+    </include>
+
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics"></plugin>
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands"></plugin>
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"></plugin>
+  
+  <!--<plugin
+    filename="gz-sim-sensors-system"
+    name="gz::sim::systems::Sensors">
+    <render_engine>ogre2</render_engine>
+  </plugin>-->
+  <!--<plugin
+    filename="gz-sim-imu-system"
+    name="gz::sim::systems::Imu">
+  </plugin>
+  <plugin
+    filename="gz-sim-magnetometer-system"
+    name="gz::sim::systems::Magnetometer">
+  </plugin>
+  <plugin
+    filename="ignition-gazebo-forcetorque-system"
+    name="ignition::gazebo::systems::ForceTorque">
+  </plugin>
+  <plugin
+    filename="ignition-gazebo-particle-emitter2-system"
+    name="ignition::gazebo::systems::ParticleEmitter2">
+  </plugin>
+  <plugin
+    filename="gz-sim-contact-system"
+    name="gz::sim::systems::Contact">
+  </plugin>
+  <plugin
+    filename="ignition-gazebo-navsat-system"
+    name="ignition::gazebo::systems::NavSat">
+  </plugin>
+  <plugin
+    filename="gz-sim-air-pressure-system"
+    name="gz::sim::systems::AirPressure">
+  </plugin>-->  
+  
+  </world>
+</sdf>
+
