@@ -58,16 +58,6 @@ This will:
 
 ---
 
----
-
-## 🎥 Demo Video
-
-You can watch a full demonstration of the project here:
-
-👉 https://www.youtube.com/watch?v=zCxGyRT_5zA
-
----
-
 ## 🎯 Execute the Mission
 
 Once the simulation is running, launch the mission:
@@ -83,3 +73,12 @@ ros2 launch ros2_fra2mo mission.launch.py
 * KUKA picks up the object and places it on Fra2mo
 * Fra2mo rotates and navigates toward a second target marker
 * The object is delivered to a destination area
+---
+
+## 🎥 Demo Video
+
+You can watch a full demonstration of the project here:
+
+👉 https://www.youtube.com/watch?v=zCxGyRT_5zA
+
+---
